@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tra cứu Thời khóa biểu Thông minh • G-EduSpace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-light: #e0f2fe;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --border-color: #cbd5e1;
+      --bg-surface: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-family);
+      background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* HEADER */
+    .header {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .header-title-wrap h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .header-title-wrap p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-action {
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-action:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-print {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .btn-print:hover {
+      background: var(--primary-hover);
+      color: white;
+    }
+
+    /* THANH ĐIỀU KHIỂN & LỌC */
+    .control-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .filter-select {
+      padding: 8px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-main);
+      background: #f8fafc;
+      cursor: pointer;
+    }
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .today-pill {
+      background: var(--warning-light);
+      border: 1px solid #fde68a;
+      color: #b45309;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 9999px;
+    }
+
+    /* BẢNG THỜI KHÓA BIỂU */
+    .table-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1rem;
+      overflow-x: auto;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    }
+
+    table.tkb-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    table.tkb-table th, table.tkb-table td {
+      border: 1px solid var(--border-color);
+      padding: 12px 10px;
+      text-align: center;
+    }
+
+    table.tkb-table th {
+      background: #f8fafc;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    table.tkb-table th.col-today,
+    table.tkb-table td.col-today {
+      background: #eff6ff;
+      border-left: 2px solid var(--primary);
+      border-right: 2px solid var(--primary);
+    }
+
+    .period-col {
+      width: 80px;
+      background: #f8fafc;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+
+    .time-slot {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .cell-subject {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #0369a1;
+      display: block;
+    }
+
+    .cell-teacher {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 3px;
+    }
+
+    .cell-empty {
+      color: #cbd5e1;
+      font-size: 1.1rem;
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .header-actions, .control-card { display: none; }
+      .table-card { box-shadow: none; border: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-title-wrap">
+        <h1>📅 Tra Cứu Thời Khóa Biểu Thông Minh</h1>
+        <p>Hệ thống lịch giảng dạy & học tập áp dụng cho năm học 2025 - 2026</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-action btn-print" onclick="window.print()">🖨️ In / Xuất PDF</button>
+      </div>
+    </header>
+
+    <!-- THANH ĐIỀU KHIỂN & BỘ LỌC -->
+    <div class="control-card">
+      <div class="filter-group">
+        <span class="filter-label">Chế độ tra cứu:</span>
+        <select class="filter-select" id="selMode" onchange="switchMode()">
+          <option value="class">Theo Từng Lớp Học</option>
+          <option value="teacher">Theo Giáo Viên Giảng Dạy</option>
+        </select>
+
+        <span class="filter-label" id="lblTarget">Chọn Lớp:</span>
+        <select class="filter-select" id="selTarget" onchange="renderTimetable()">
+          <!-- Tùy chọn sẽ đổi theo chế độ -->
+        </select>
+      </div>
+
+      <div class="today-pill" id="todayText">
+        📍 Hôm nay: Đang tải...
+      </div>
+    </div>
+
+    <!-- BẢNG THỜI KHÓA BIỂU -->
+    <div class="table-card">
+      <table class="tkb-table" id="tkbTable">
+        <thead>
+          <tr>
+            <th class="period-col">Tiết</th>
+            <th id="th-2">Thứ 2</th>
+            <th id="th-3">Thứ 3</th>
+            <th id="th-4">Thứ 4</th>
+            <th id="th-5">Thứ 5</th>
+            <th id="th-6">Thứ 6</th>
+            <th id="th-7">Thứ 7</th>
+          </tr>
+        </thead>
+        <tbody id="tkbBody">
+          <!-- Render tự động bởi JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // DỮ LIỆU THỜI KHÓA BIỂU MẪU CHUẨN
+    const SCHEDULE_DATA = {
+      classes: {
+        "7A1": [
+          { p: 1, time: "07:00 - 07:45", d2: { s: "Chào cờ", t: "Toàn trường" }, d3: { s: "KHTN (Hóa)", t: "Thầy Giang" }, d4: { s: "Toán", t: "Cô Lan" }, d5: { s: "Ngữ văn", t: "Cô Mai" }, d6: { s: "Tiếng Anh", t: "Thầy Hùng" }, d7: { s: "Toán", t: "Cô Lan" } },
+          { p: 2, time: "07:50 - 08:35", d2: { s: "Toán", t: "Cô Lan" }, d3: { s: "KHTN (Hóa)", t: "Thầy Giang" }, d4: { s: "Ngữ văn", t: "Cô Mai" }, d5: { s: "KHTN (Lý)", t: "Thầy Nam" }, d6: { s: "Tin học", t: "Thầy Tuấn" }, d7: { s: "Lịch sử & ĐL", t: "Cô Thảo" } },
+          { p: 3, time: "08:50 - 09:35", d2: { s: "Ngữ văn", t: "Cô Mai" }, d3: { s: "Tiếng Anh", t: "Thầy Hùng" }, d4: { s: "KHTN (Sinh)", t: "Cô Hương" }, d5: { s: "Lịch sử & ĐL", t: "Cô Thảo" }, d6: { s: "Toán", t: "Cô Lan" }, d7: { s: "Giáo dục CD", t: "Thầy Hải" } },
+          { p: 4, time: "09:40 - 10:25", d2: { s: "KHTN (Lý)", t: "Thầy Nam" }, d3: { s: "Công nghệ", t: "Thầy Bình" }, d4: { s: "Tiếng Anh", t: "Thầy Hùng" }, d5: { s: "Âm nhạc", t: "Cô Yến" }, d6: { s: "Thể dục", t: "Thầy Long" }, d7: { s: "Sinh hoạt lớp", t: "Cô Lan (GVCN)" } }
+        ],
+        "7A2": [
+          { p: 1, time: "07:00 - 07:45", d2: { s: "Chào cờ", t: "Toàn trường" }, d3: { s: "Toán", t: "Cô Lan" }, d4: { s: "Ngữ văn", t: "Cô Mai" }, d5: { s: "KHTN (Hóa)", t: "Thầy Giang" }, d6: { s: "Toán", t: "Cô Lan" }, d7: { s: "Tiếng Anh", t: "Thầy Hùng" } },
+          { p: 2, time: "07:50 - 08:35", d2: { s: "Tiếng Anh", t: "Thầy Hùng" }, d3: { s: "Ngữ văn", t: "Cô Mai" }, d4: { s: "Toán", t: "Cô Lan" }, d5: { s: "KHTN (Hóa)", t: "Thầy Giang" }, d6: { s: "Lịch sử & ĐL", t: "Cô Thảo" }, d7: { s: "Tin học", t: "Thầy Tuấn" } },
+          { p: 3, time: "08:50 - 09:35", d2: { s: "KHTN (Sinh)", t: "Cô Hương" }, d3: { s: "Toán", t: "Cô Lan" }, d4: { s: "KHTN (Lý)", t: "Thầy Nam" }, d5: { s: "Tiếng Anh", t: "Thầy Hùng" }, d6: { s: "Giáo dục CD", t: "Thầy Hải" }, d7: { s: "Công nghệ", t: "Thầy Bình" } },
+          { p: 4, time: "09:40 - 10:25", d2: { s: "Ngữ văn", t: "Cô Mai" }, d3: { s: "Thể dục", t: "Thầy Long" }, d4: { s: "Mĩ thuật", t: "Cô Nga" }, d5: { s: "Ngữ văn", t: "Cô Mai" }, d6: { s: "KHTN (Lý)", t: "Thầy Nam" }, d7: { s: "Sinh hoạt lớp", t: "Thầy Hùng (GVCN)" } }
+        ]
+      },
+      teachers: {
+        "Thầy Giang (KHTN - Hóa)": [
+          { p: 1, time: "07:00 - 07:45", d2: null, d3: { s: "KHTN 7", t: "Lớp 7A1" }, d4: null, d5: { s: "KHTN 7", t: "Lớp 7A2" }, d6: null, d7: null },
+          { p: 2, time: "07:50 - 08:35", d2: null, d3: { s: "KHTN 7", t: "Lớp 7A1" }, d4: null, d5: { s: "KHTN 7", t: "Lớp 7A2" }, d6: null, d7: null },
+          { p: 3, time: "08:50 - 09:35", d2: { s: "KHTN 8", t: "Lớp 8A1" }, d3: null, d4: { s: "KHTN 8", t: "Lớp 8A2" }, d5: null, d6: { s: "KHTN 8", t: "Lớp 8A1" }, d7: null },
+          { p: 4, time: "09:40 - 10:25", d2: { s: "KHTN 8", t: "Lớp 8A1" }, d3: null, d4: null, d5: null, d6: null, d7: null }
+        ],
+        "Cô Lan (Toán học)": [
+          { p: 1, time: "07:00 - 07:45", d2: null, d3: { s: "Toán 7", t: "Lớp 7A2" }, d4: { s: "Toán 7", t: "Lớp 7A1" }, d5: null, d6: { s: "Toán 7", t: "Lớp 7A2" }, d7: { s: "Toán 7", t: "Lớp 7A1" } },
+          { p: 2, time: "07:50 - 08:35", d2: { s: "Toán 7", t: "Lớp 7A1" }, d3: null, d4: { s: "Toán 7", t: "Lớp 7A2" }, d5: null, d6: null, d7: null },
+          { p: 3, time: "08:50 - 09:35", d2: null, d3: { s: "Toán 7", t: "Lớp 7A2" }, d4: null, d5: null, d6: { s: "Toán 7", t: "Lớp 7A1" }, d7: null },
+          { p: 4, time: "09:40 - 10:25", d2: null, d3: null, d4: null, d5: null, d6: null, d7: { s: "SHCN", t: "Lớp 7A1" } }
+        ]
+      }
+    };
+
+    // NHẬN DIỆN THỨ HIỆN TẠI ĐỂ HIGHLIGHT
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0: CN, 1: T2, 2: T3 ... 6: T7
+    const dayNames = ["Chủ nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+    document.getElementById('todayText').textContent = `📍 Hôm nay: ${dayNames[dayOfWeek]} (${now.toLocaleDateString('vi-VN')})`;
+
+    const todayDayIndex = dayOfWeek >= 1 && dayOfWeek <= 6 ? dayOfWeek + 1 : null;
+    if (todayDayIndex) {
+      const thToday = document.getElementById(`th-${todayDayIndex}`);
+      if (thToday) thToday.classList.add('col-today');
+    }
+
+    function switchMode() {
+      const mode = document.getElementById('selMode').value;
+      const target = document.getElementById('selTarget');
+      const label = document.getElementById('lblTarget');
+
+      target.innerHTML = '';
+      if (mode === 'class') {
+        label.textContent = 'Chọn Lớp:';
+        Object.keys(SCHEDULE_DATA.classes).forEach(cls => {
+          target.innerHTML += `<option value="${cls}">Lớp ${cls}</option>`;
+        });
+      } else {
+        label.textContent = 'Chọn Giáo viên:';
+        Object.keys(SCHEDULE_DATA.teachers).forEach(tch => {
+          target.innerHTML += `<option value="${tch}">${tch}</option>`;
+        });
+      }
+      renderTimetable();
+    }
+
+    function renderTimetable() {
+      const mode = document.getElementById('selMode').value;
+      const targetVal = document.getElementById('selTarget').value;
+      const tbody = document.getElementById('tkbBody');
+
+      const data = mode === 'class' 
+        ? SCHEDULE_DATA.classes[targetVal] 
+        : SCHEDULE_DATA.teachers[targetVal];
+
+      if (!data) return;
+
+      tbody.innerHTML = data.map(row => {
+        return `
+          <tr>
+            <td class="period-col">
+              Tiết ${row.p}
+              <span class="time-slot">${row.time}</span>
+            </td>
+            ${renderCell(row.d2, 2)}
+            ${renderCell(row.d3, 3)}
+            ${renderCell(row.d4, 4)}
+            ${renderCell(row.d5, 5)}
+            ${renderCell(row.d6, 6)}
+            ${renderCell(row.d7, 7)}
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderCell(slot, dayIdx) {
+      const isToday = todayDayIndex === dayIdx ? 'col-today' : '';
+      if (!slot) {
+        return `<td class="${isToday}"><span class="cell-empty">-</span></td>`;
+      }
+      return `
+        <td class="${isToday}">
+          <span class="cell-subject">${slot.s}</span>
+          <span class="cell-teacher">${slot.t}</span>
+        </td>
+      `;
+    }
+
+    // Khởi chạy
+    switchMode();
+  </script>
+</body>
+</html>

@@ -12,8 +12,8 @@ const APPS_DATA = [
     grade: "Lớp 7",
     subject: "Khoa học tự nhiên",
     badge: "Chuẩn Vàng KHTN",
-    badgeType: "primary", // primary, success, warning, ai
-    thumbnailIcon: "atom", // SVG icon identifier
+    badgeType: "primary",
+    thumbnailIcon: "atom",
     description: "Khám phá cấu tạo nguyên tử của 20 nguyên tố đầu tiên, quan sát electron chuyển động trên các lớp quỹ đạo, bảng tra cứu IUPAC và phát âm quốc tế chuẩn sư phạm.",
     tags: ["KHTN 7", "Hóa học", "Mô hình Bohr", "100vh Zero-Scroll"],
     url: "apps/khtn-bohr-atom/index.html",
@@ -37,6 +37,23 @@ const APPS_DATA = [
     featured: true,
     version: "v1.2",
     author: "G-EduSpace AI"
+  },
+  {
+    id: "thoi-khoa-bieu",
+    title: "Tra cứu Thời khóa biểu Toàn trường & Cá nhân",
+    category: "tools",
+    categoryName: "Tiện ích Sư phạm",
+    grade: "Toàn trường",
+    subject: "Quản lý & Giảng dạy",
+    badge: "Lịch Dạy - Lịch Học",
+    badgeType: "warning",
+    thumbnailIcon: "calendar",
+    description: "Hệ thống tra cứu thời khóa biểu thông minh: tra cứu nhanh theo từng lớp hoặc theo từng giáo viên, tự động làm nổi bật ngày dạy hôm nay và hỗ trợ in ấn nhanh.",
+    tags: ["Thời khóa biểu", "Lịch dạy", "Tra cứu theo giáo viên", "In ấn"],
+    url: "apps/thoi-khoa-bieu/index.html",
+    featured: true,
+    version: "v1.0",
+    author: "G-EduSpace"
   },
   {
     id: "tien-ich-xep-nhom",
