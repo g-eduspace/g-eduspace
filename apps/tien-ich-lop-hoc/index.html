@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vòng Xoay Gọi Tên & Chia Nhóm Học Tập • G-EduSpace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #16a34a;
+      --primary-hover: #15803d;
+      --primary-light: #dcfce7;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-family);
+      background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .header {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .header h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #15803d;
+    }
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+    }
+    .tab-nav-btn {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tab-nav-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .panel {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    /* VÒNG XOAY / CHỌN SỐ */
+    .random-display {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #bbf7d0 0%, #16a34a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 64px;
+      font-weight: 900;
+      box-shadow: 0 10px 25px rgba(22, 163, 74, 0.35);
+      border: 6px solid #ffffff;
+      transition: transform 0.1s;
+    }
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .inp-range {
+      padding: 10px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+      width: 100px;
+      text-align: center;
+      font-weight: 700;
+    }
+    .btn-spin {
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+      transition: all 0.2s;
+    }
+    .btn-spin:hover {
+      background: #15803d;
+      transform: translateY(-2px);
+    }
+    /* CHIA NHÓM */
+    .groups-result {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      width: 100%;
+    }
+    .group-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+    .group-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #15803d;
+      margin-bottom: 0.5rem;
+      border-bottom: 2px solid #bbf7d0;
+      padding-bottom: 4px;
+    }
+    .group-members {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🎲 Tiện Ích Lớp Học Thông Minh • G-EduSpace</h1>
+      <div class="tabs-nav">
+        <button class="tab-nav-btn active" id="tabRandomBtn" onclick="switchTab('random')">🎯 Gọi Tên / Bốc Số</button>
+        <button class="tab-nav-btn" id="tabGroupBtn" onclick="switchTab('groups')">👥 Tự Động Chia Nhóm</button>
+      </div>
+    </header>
+
+    <!-- TAB 1: GỌI TÊN NGẪU NHIÊN -->
+    <main class="panel" id="panelRandom">
+      <div class="random-display" id="displayNum">?</div>
+      <div class="controls">
+        <span>Từ số:</span>
+        <input type="number" id="inpMin" class="inp-range" value="1" min="1">
+        <span>đến số:</span>
+        <input type="number" id="inpMax" class="inp-range" value="40" min="1">
+        <button class="btn-spin" id="btnSpin" onclick="spinNumber()">🎲 Quay số gọi tên!</button>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600;">
+        (Phù hợp bốc thăm số thứ tự học sinh trong sổ điểm để trả lời bài học)
+      </p>
+    </main>
+
+    <!-- TAB 2: CHIA NHÓM TỰ ĐỘNG -->
+    <main class="panel" id="panelGroups" style="display: none;">
+      <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+        <label style="font-weight: 700;">Tổng số học sinh:</label>
+        <input type="number" id="inpTotalStudents" class="inp-range" value="36" min="2">
+        <label style="font-weight: 700;">Số lượng nhóm cần chia:</label>
+        <input type="number" id="inpNumGroups" class="inp-range" value="4" min="2" max="10">
+        <button class="btn-spin" onclick="generateGroups()">⚡ Chia nhóm ngay</button>
+      </div>
+      <div class="groups-result" id="groupsResult"></div>
+    </main>
+  </div>
+
+  <script>
+    function switchTab(type) {
+      if (type === 'random') {
+        document.getElementById('panelRandom').style.display = 'flex';
+        document.getElementById('panelGroups').style.display = 'none';
+        document.getElementById('tabRandomBtn').classList.add('active');
+        document.getElementById('tabGroupBtn').classList.remove('active');
+      } else {
+        document.getElementById('panelRandom').style.display = 'none';
+        document.getElementById('panelGroups').style.display = 'flex';
+        document.getElementById('tabRandomBtn').classList.remove('active');
+        document.getElementById('tabGroupBtn').classList.add('active');
+      }
+    }
+
+    let isSpinning = false;
+    function spinNumber() {
+      if (isSpinning) return;
+      isSpinning = true;
+      const min = parseInt(document.getElementById('inpMin').value) || 1;
+      const max = parseInt(document.getElementById('inpMax').value) || 40;
+      const display = document.getElementById('displayNum');
+
+      let counter = 0;
+      const interval = setInterval(() => {
+        const rand = Math.floor(Math.random() * (max - min + 1)) + min;
+        display.textContent = rand;
+        display.style.transform = `scale(${1 + Math.random() * 0.15})`;
+        counter++;
+        if (counter > 25) {
+          clearInterval(interval);
+          display.style.transform = 'scale(1)';
+          isSpinning = false;
+        }
+      }, 60);
+    }
+
+    function generateGroups() {
+      const total = parseInt(document.getElementById('inpTotalStudents').value) || 36;
+      const numGroups = parseInt(document.getElementById('inpNumGroups').value) || 4;
+      const result = document.getElementById('groupsResult');
+
+      const students = Array.from({ length: total }, (_, i) => i + 1);
+      // Shuffle
+      for (let i = students.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [students[i], students[j]] = [students[j], students[i]];
+      }
+
+      const groups = Array.from({ length: numGroups }, () => []);
+      students.forEach((st, idx) => {
+        groups[idx % numGroups].push(st);
+      });
+
+      result.innerHTML = groups.map((grp, i) => `
+        <div class="group-box">
+          <div class="group-title">Nhóm ${i + 1} (${grp.length} học sinh)</div>
+          <div class="group-members">Số: ${grp.sort((a,b)=>a-b).join(', ')}</div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-EduSpace • Không Gian Giáo Dục & Ứng Dụng Số</title>
+  <meta name="description" content="Cổng học liệu số, mô phỏng thí nghiệm KHTN và công cụ trợ lý AI dành cho giáo viên">
+  <!-- Google Fonts: Be Vietnam Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- =======================================================================
+       HEADER / THANH ĐIỀU HƯỚNG ĐỈNH
+       ======================================================================= -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand-wrapper">
+        <div class="brand-logo-icon">G</div>
+        <div class="brand-text">
+          <h1>G-Edu<span>Space</span></h1>
+          <div class="brand-subtitle">Không Gian Giáo Dục & Ứng Dụng Số</div>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <div class="header-badge">
+          <span class="pulse-dot"></span>
+          <span>Hệ thống trực tuyến</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =======================================================================
+       HERO BANNER & KHUNG TÌM KIẾM
+       ======================================================================= -->
+  <section class="hero-section">
+    <div class="hero-card">
+      <div class="hero-card-header">
+        <div>
+          <h2>Kho Ứng Dụng Giảng Dạy & Trợ Lý Sư Phạm</h2>
+          <p>Nền tảng chia sẻ thí nghiệm mô phỏng Khoa học tự nhiên, công cụ AI soạn giảng và tiện ích dạy học tương tác miễn phí dành cho quý thầy cô đồng nghiệp.</p>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-number" id="totalAppsCount">3</span>
+            <span class="stat-label">Ứng dụng</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Miễn phí</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Khung tìm kiếm & Danh mục -->
+      <div class="search-filter-bar">
+        <div class="search-box-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Tìm kiếm ứng dụng (Ví dụ: KHTN, Nguyên tử, Trợ lý AI, Lớp 7...)"
+            autocomplete="off"
+          >
+        </div>
+
+        <!-- Tab danh mục phân loại -->
+        <div class="category-tabs" id="categoryTabs">
+          <!-- Render tự động bởi js/app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================================
+       LƯỚI HIỂN THỊ DANH SÁCH ỨNG DỤNG
+       ======================================================================= -->
+  <main class="main-content">
+    <div class="section-title-wrap">
+      <h2 class="section-title">
+        <span>Danh mục Ứng dụng</span>
+        <span id="filteredCount" style="font-size: 0.95rem; font-weight: 600; color: var(--text-muted);">(3 ứng dụng)</span>
+      </h2>
+    </div>
+
+    <!-- Lưới ứng dụng -->
+    <div class="apps-grid" id="appsGrid">
+      <!-- Được render tự động từ js/app.js -->
+    </div>
+  </main>
+
+  <!-- =======================================================================
+       MODAL XEM TRỰC TIẾP ỨNG DỤNG (INLINE VIEWER)
+       ======================================================================= -->
+  <div class="app-modal" id="appModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span class="modal-title" id="modalTitle">Tên ứng dụng</span>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-action-btn" id="btnFullscreen" title="Xem toàn màn hình">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+            Toàn màn hình
+          </button>
+          <a href="#" class="modal-action-btn" id="btnOpenNewTab" target="_blank" rel="noopener" title="Mở trang trong tab mới">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            Tab mới
+          </a>
+          <button class="modal-action-btn btn-close-modal" id="btnCloseModal" title="Đóng cửa sổ">
+            ✕ Đóng
+          </button>
+        </div>
+      </div>
+      <div class="modal-iframe-wrapper">
+        <iframe id="modalIframe" class="modal-iframe" src="about:blank" allow="fullscreen; microphone; speaker"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       FOOTER / CHÂN TRANG
+       ======================================================================= -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <div class="footer-brand">G-EduSpace • Không Gian Giáo Dục & Ứng Dụng Số</div>
+        <div class="footer-desc">Được xây dựng phục vụ nghiên cứu sư phạm, đổi mới phương pháp dạy học môn KHTN và chuyển đổi số trường học.</div>
+      </div>
+      <div class="footer-right">
+        <span>Phiên bản 1.0 (Miễn phí)</span>
+        <span>•</span>
+        <span>Thầy Giang</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/apps-data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

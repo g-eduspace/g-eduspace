@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mô phỏng Mô hình Nguyên tử Bohr & Bảng 20 Nguyên tố • KHTN 7</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       QUY CHUẨN VÀNG: 100VH ZERO-SCROLL & EDUCATIONAL BRIGHT THEME
+       ========================================================================== */
+    :root {
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-light: #e0f2fe;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --amber: #b45309;
+      --amber-light: #fef3c7;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --bg-surface: #ffffff;
+      --font-family: 'Be Vietnam Pro', system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden; /* Cấm tuyệt đối thanh cuộn ngoài 100vh */
+      font-family: var(--font-family);
+      background: linear-gradient(135deg, #f8fafc 0%, #f0f7ff 100%);
+      color: var(--text-main);
+    }
+
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* TOP BAR CHUẨN MỚI */
+    .top-bar {
+      height: clamp(46px, 5.5vh, 54px);
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 clamp(12px, 1.5vw, 24px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      flex-shrink: 0;
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-khtn {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 900;
+      font-size: clamp(12px, 0.9vw, 14px);
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .lesson-title {
+      font-size: clamp(14px, 1.1vw, 17px);
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: clamp(6px, 0.8vh, 8px) clamp(12px, 1vw, 16px);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: clamp(13px, 0.9vw, 15px);
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      color: #ffffff;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .btn-top:hover { transform: translateY(-1px); opacity: 0.95; }
+    .btn-practice { background: var(--primary); }
+    .btn-summary { background: var(--success); }
+
+    /* KHUNG MÀN HÌNH 2 CỘT */
+    .stage-container {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - clamp(46px, 5.5vh, 54px));
+      overflow: hidden;
+      padding: clamp(8px, 1vh, 14px);
+      gap: clamp(8px, 1vw, 14px);
+    }
+
+    /* CỘT TRÁI: SÂN KHẤU MÔ HÌNH BOHR & BẢNG 20 NGUYÊN TỐ */
+    .stage-left {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: clamp(10px, 1.2vh, 16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .bohr-canvas-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: radial-gradient(circle, #f0fdf4 0%, #ffffff 70%);
+      border-radius: 12px;
+      border: 1px dashed #cbd5e1;
+      overflow: hidden;
+      min-height: 220px;
+    }
+
+    #bohrCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* BẢNG CHỌN 20 NGUYÊN TỐ */
+    .elements-tray {
+      margin-top: 10px;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px;
+    }
+
+    .tray-header {
+      font-size: clamp(12px, 0.85vw, 13.5px);
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .elements-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 5px;
+    }
+
+    .el-btn {
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      border-radius: 6px;
+      padding: clamp(4px, 0.6vh, 7px) 2px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .el-btn:hover {
+      border-color: var(--primary);
+      transform: scale(1.05);
+      background: var(--primary-light);
+    }
+    .el-btn.active {
+      background: var(--primary);
+      border-color: #0369a1;
+      box-shadow: 0 0 0 2px #bae6fd;
+    }
+    .el-btn.active .el-z,
+    .el-btn.active .el-symbol {
+      color: #ffffff;
+    }
+    .el-z {
+      font-size: clamp(9px, 0.65vw, 11px);
+      font-weight: 700;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+    .el-symbol {
+      font-size: clamp(14px, 1.1vw, 18px);
+      font-weight: 900;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    /* CỘT PHẢI: BẢNG DỮ LIỆU ĐỐI CHIẾU & THÔNG SỐ VÀNG */
+    .stage-right {
+      width: clamp(380px, 32vw, 460px);
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: clamp(12px, 1.4vh, 18px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    /* THẺ HERO NGUYÊN TỐ */
+    .hero-element-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 2px solid #7dd3fc;
+      border-radius: 14px;
+      padding: clamp(12px, 1.5vh, 16px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .hero-symbol-box {
+      width: clamp(80px, 6.5vw, 96px);
+      height: clamp(80px, 6.5vw, 96px);
+      background: #ffffff;
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.15);
+      flex-shrink: 0;
+    }
+    .hero-symbol {
+      font-size: clamp(40px, 3.2vw, 52px);
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1;
+    }
+    .hero-z {
+      font-size: clamp(12px, 0.85vw, 14px);
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+
+    .hero-meta {
+      flex: 1;
+    }
+    .hero-name-iupac-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hero-name-iupac {
+      font-size: clamp(22px, 1.6vw, 28px);
+      font-weight: 900;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+    .btn-speaker-iupac {
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+    .btn-speaker-iupac:hover { background: var(--primary-light); border-color: var(--primary); }
+    .btn-speaker-iupac.speaking { animation: pulseSpeaker 0.6s infinite alternate; }
+
+    @keyframes pulseSpeaker {
+      from { transform: scale(1); background: #bae6fd; }
+      to { transform: scale(1.15); background: #38bdf8; color: white; }
+    }
+
+    .hero-subname {
+      font-size: clamp(13px, 0.95vw, 15px);
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* KHUNG THÔNG SỐ HẠT BẢN CHẤT */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(8px, 1vh, 12px);
+      margin: clamp(10px, 1.2vh, 14px) 0;
+    }
+    .spec-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: clamp(8px, 1vh, 12px);
+      text-align: center;
+    }
+    .spec-label {
+      font-size: clamp(12px, 0.8vw, 13px);
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .spec-value {
+      font-size: clamp(22px, 1.6vw, 28px);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+    .val-proton { color: var(--danger); }
+    .val-electron { color: var(--primary); }
+    .val-neutron { color: #0891b2; }
+    .val-amu { color: var(--amber); }
+
+    /* CẤU HÌNH ELECTRON THEO LỚP */
+    .shells-panel {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: clamp(10px, 1.2vh, 14px);
+    }
+    .shells-header {
+      font-size: clamp(13px, 0.9vw, 14.5px);
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .shells-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .shell-chip {
+      background: var(--primary-light);
+      border: 1px solid #bae6fd;
+      color: var(--primary-hover);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: clamp(13px, 0.9vw, 15px);
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .shell-num {
+      background: #ffffff;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    /* MODAL POPUPS */
+    .khtn-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .khtn-modal.active { display: flex; }
+    .khtn-modal-content {
+      background: #ffffff;
+      width: 90vw;
+      max-width: 680px;
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+    .khtn-modal-title {
+      font-size: clamp(18px, 1.4vw, 22px);
+      font-weight: 900;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-close-popup {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .quiz-opt-btn {
+      background: #f8fafc;
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: clamp(15px, 1vw, 17px);
+      font-weight: 800;
+      font-family: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .quiz-opt-btn:hover { background: var(--primary-light); border-color: var(--primary); }
+    .quiz-opt-btn.correct { background: var(--success-light); border-color: var(--success); color: var(--success); }
+    .quiz-opt-btn.wrong { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+    <!-- TOP BAR CHUẨN THẦY GIANG -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <span class="badge-khtn">KHTN 7</span>
+        <h1 class="lesson-title">Bài 3: Cấu tạo nguyên tử & Bảng 20 nguyên tố đầu tiên</h1>
+      </div>
+      <div class="top-bar-right">
+        <button class="btn-top btn-practice" id="btnOpenPractice">📝 Luyện tập</button>
+        <button class="btn-top btn-summary" id="btnOpenSummary">📖 Kết luận</button>
+      </div>
+    </header>
+
+    <!-- SÂN KHẤU 2 CỘT -->
+    <div class="stage-container">
+      <!-- CỘT TRÁI: CANVAS BOHR & KHAY NGUYÊN TỐ -->
+      <section class="stage-left">
+        <div class="bohr-canvas-wrapper">
+          <canvas id="bohrCanvas"></canvas>
+        </div>
+
+        <div class="elements-tray">
+          <div class="tray-header">
+            <span>BẢNG 20 NGUYÊN TỐ ĐẦU TIÊN (CHỌN ĐỂ MÔ PHỎNG)</span>
+            <span id="currentSelectionText">Đang chọn: Hydrogen (Z = 1)</span>
+          </div>
+          <div class="elements-grid" id="elementsGrid">
+            <!-- Render tự động 20 nguyên tố -->
+          </div>
+        </div>
+      </section>
+
+      <!-- CỘT PHẢI: THÔNG SỐ VÀNG & CẤU HÌNH ELECTRON -->
+      <aside class="stage-right">
+        <div class="hero-element-card">
+          <div class="hero-symbol-box">
+            <span class="hero-symbol" id="heroSymbol">H</span>
+            <span class="hero-z" id="heroZ">Z = 1</span>
+          </div>
+          <div class="hero-meta">
+            <div class="hero-name-iupac-wrap">
+              <span class="hero-name-iupac" id="heroNameIupac">Hydrogen</span>
+              <button class="btn-speaker-iupac" id="btnSpeak" title="Nghe phát âm chuẩn quốc tế IUPAC">🔊</button>
+            </div>
+            <div class="hero-subname" id="heroSubname">Tên tiếng Việt: Hi-đrô</div>
+          </div>
+        </div>
+
+        <div class="specs-grid">
+          <div class="spec-card">
+            <div class="spec-label">Số Proton (p+)</div>
+            <div class="spec-value val-proton" id="specProton">1</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Số Electron (e-)</div>
+            <div class="spec-value val-electron" id="specElectron">1</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Số Neutron (n)</div>
+            <div class="spec-value val-neutron" id="specNeutron">0</div>
+          </div>
+          <div class="spec-card">
+            <div class="spec-label">Khối lượng (amu)</div>
+            <div class="spec-value val-amu" id="specAmu">1</div>
+          </div>
+        </div>
+
+        <div class="shells-panel">
+          <div class="shells-header">Phân bố electron trên các lớp (Quỹ đạo Bohr):</div>
+          <div class="shells-chips" id="shellsChips">
+            <!-- Chips phân bố electron -->
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- MODAL LUYỆN TẬP -->
+  <div class="khtn-modal" id="modalPractice">
+    <div class="khtn-modal-content">
+      <div class="khtn-modal-title">
+        <span>📝 Câu hỏi tương tác nhanh</span>
+        <button class="btn-close-popup" onclick="closeModals()">✕</button>
+      </div>
+      <p style="font-size: 17px; font-weight: 700;" id="quizQuestion">
+        Nguyên tử Carbon (Z = 6) có bao nhiêu electron ở lớp ngoài cùng?
+      </p>
+      <div class="quiz-options" id="quizOptions">
+        <button class="quiz-opt-btn" onclick="checkAnswer(this, false)">A. 2 electron</button>
+        <button class="quiz-opt-btn" onclick="checkAnswer(this, true)">B. 4 electron</button>
+        <button class="quiz-opt-btn" onclick="checkAnswer(this, false)">C. 6 electron</button>
+        <button class="quiz-opt-btn" onclick="checkAnswer(this, false)">D. 8 electron</button>
+      </div>
+      <div id="quizFeedback" style="margin-top: 12px; font-weight: 800; font-size: 15px;"></div>
+    </div>
+  </div>
+
+  <!-- MODAL KẾT LUẬN -->
+  <div class="khtn-modal" id="modalSummary">
+    <div class="khtn-modal-content">
+      <div class="khtn-modal-title">
+        <span>📖 Kết luận cốt lõi ghi vở</span>
+        <button class="btn-close-popup" onclick="closeModals()">✕</button>
+      </div>
+      <ul style="font-size: 16px; line-height: 1.8; font-weight: 600; padding-left: 20px;">
+        <li>Nguyên tử có cấu tạo gồm: <b>Hạt nhân</b> mang điện tích dương và <b>vỏ nguyên tử</b> chứa các electron mang điện tích âm.</li>
+        <li>Trong mọi nguyên tử trung hòa về điện: <b>Số proton = Số electron = Z</b>.</li>
+        <li>Các electron chuyển động quanh hạt nhân và sắp xếp thành từng <b>lớp electron</b> (Lớp 1 tối đa 2e, lớp 2 tối đa 8e, lớp 3 tối đa 8e/18e).</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    /* DỮ LIỆU 20 NGUYÊN TỐ ĐẦU TIÊN CHUẨN SGK KHTN 7 */
+    const ELEMENTS = [
+      { z: 1, symbol: "H", name: "Hydrogen", vn: "Hi-đrô", mass: 1, p: 1, e: 1, n: 0, shells: [1] },
+      { z: 2, symbol: "He", name: "Helium", vn: "Hê-li", mass: 4, p: 2, e: 2, n: 2, shells: [2] },
+      { z: 3, symbol: "Li", name: "Lithium", vn: "Li-ti", mass: 7, p: 3, e: 3, n: 4, shells: [2, 1] },
+      { z: 4, symbol: "Be", name: "Beryllium", vn: "Bê-ri", mass: 9, p: 4, e: 4, n: 5, shells: [2, 2] },
+      { z: 5, symbol: "B", name: "Boron", vn: "Bo", mass: 11, p: 5, e: 5, n: 6, shells: [2, 3] },
+      { z: 6, symbol: "C", name: "Carbon", vn: "Cac-bon", mass: 12, p: 6, e: 6, n: 6, shells: [2, 4] },
+      { z: 7, symbol: "N", name: "Nitrogen", vn: "Ni-tơ", mass: 14, p: 7, e: 7, n: 7, shells: [2, 5] },
+      { z: 8, symbol: "O", name: "Oxygen", vn: "Ô-xi", mass: 16, p: 8, e: 8, n: 8, shells: [2, 6] },
+      { z: 9, symbol: "F", name: "Fluorine", vn: "Flo", mass: 19, p: 9, e: 9, n: 10, shells: [2, 7] },
+      { z: 10, symbol: "Ne", name: "Neon", vn: "Nê-on", mass: 20, p: 10, e: 10, n: 10, shells: [2, 8] },
+      { z: 11, symbol: "Na", name: "Sodium", vn: "Na-tri", mass: 23, p: 11, e: 11, n: 12, shells: [2, 8, 1] },
+      { z: 12, symbol: "Mg", name: "Magnesium", vn: "Ma-nhê", mass: 24, p: 12, e: 12, n: 12, shells: [2, 8, 2] },
+      { z: 13, symbol: "Al", name: "Aluminium", vn: "Nhôm", mass: 27, p: 13, e: 13, n: 14, shells: [2, 8, 3] },
+      { z: 14, symbol: "Si", name: "Silicon", vn: "Si-líc", mass: 28, p: 14, e: 14, n: 14, shells: [2, 8, 4] },
+      { z: 15, symbol: "P", name: "Phosphorus", vn: "Phốt-pho", mass: 31, p: 15, e: 15, n: 16, shells: [2, 8, 5] },
+      { z: 16, symbol: "S", name: "Sulfur", vn: "Lưu huỳnh", mass: 32, p: 16, e: 16, n: 16, shells: [2, 8, 6] },
+      { z: 17, symbol: "Cl", name: "Chlorine", vn: "Clo", mass: 35.5, p: 17, e: 17, n: 18, shells: [2, 8, 7] },
+      { z: 18, symbol: "Ar", name: "Argon", vn: "Ac-gon", mass: 40, p: 18, e: 18, n: 22, shells: [2, 8, 8] },
+      { z: 19, symbol: "K", name: "Potassium", vn: "Ka-li", mass: 39, p: 19, e: 19, n: 20, shells: [2, 8, 8, 1] },
+      { z: 20, symbol: "Ca", name: "Calcium", vn: "Can-xi", mass: 40, p: 20, e: 20, n: 20, shells: [2, 8, 8, 2] }
+    ];
+
+    let currentEl = ELEMENTS[0];
+
+    // WEB AUDIO API NỘI TUYẾN 100% OFFLINE
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) audioCtx = new AudioContextClass();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+    function playAudioTing() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(987.77, now);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      } catch (e) {}
+    }
+    function playAudioBeep() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const filter = ctx.createBiquadFilter();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(140, now);
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(850, now);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.20, now + 0.015);
+        gain.gain.setValueAtTime(0.20, now + 0.135);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.19);
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.19);
+      } catch (e) {}
+    }
+
+    // WEB SPEECH API PHÁT ÂM IUPAC
+    function speakName(name) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(name);
+      u.lang = 'en-US';
+      u.rate = 0.88;
+      const btn = document.getElementById('btnSpeak');
+      btn.classList.add('speaking');
+      u.onend = () => btn.classList.remove('speaking');
+      u.onerror = () => btn.classList.remove('speaking');
+      window.speechSynthesis.speak(u);
+    }
+
+    // RENDER LƯỚI 20 NGUYÊN TỐ
+    const grid = document.getElementById('elementsGrid');
+    ELEMENTS.forEach(el => {
+      const b = document.createElement('button');
+      b.className = `el-btn ${el.z === 1 ? 'active' : ''}`;
+      b.id = `btn-el-${el.z}`;
+      b.innerHTML = `<span class="el-z">${el.z}</span><span class="el-symbol">${el.symbol}</span>`;
+      b.addEventListener('click', () => selectElement(el));
+      grid.appendChild(b);
+    });
+
+    function selectElement(el) {
+      currentEl = el;
+      document.querySelectorAll('.el-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-el-${el.z}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.getElementById('currentSelectionText').textContent = `Đang chọn: ${el.name} (Z = ${el.z})`;
+      document.getElementById('heroSymbol').textContent = el.symbol;
+      document.getElementById('heroZ').textContent = `Z = ${el.z}`;
+      document.getElementById('heroNameIupac').textContent = el.name;
+      document.getElementById('heroSubname').textContent = `Tên tiếng Việt: ${el.vn}`;
+
+      document.getElementById('specProton').textContent = el.p;
+      document.getElementById('specElectron').textContent = el.e;
+      document.getElementById('specNeutron').textContent = el.n;
+      document.getElementById('specAmu').textContent = el.mass;
+
+      // Render shell chips
+      const chips = document.getElementById('shellsChips');
+      chips.innerHTML = el.shells.map((count, idx) => `
+        <div class="shell-chip">
+          <span>Lớp ${idx + 1}:</span>
+          <span class="shell-num">${count}e</span>
+        </div>
+      `).join('');
+
+      playAudioTing();
+    }
+
+    // CANVAS MÔ PHỎNG BOHR
+    const canvas = document.getElementById('bohrCanvas');
+    const ctx = canvas.getContext('2d');
+    let angle = 0;
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawBohr() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const maxRadius = Math.min(cx, cy) * 0.85;
+
+      // Vẽ hạt nhân
+      ctx.beginPath();
+      ctx.arc(cx, cy, 26, 0, Math.PI * 2);
+      ctx.fillStyle = '#dc2626';
+      ctx.fill();
+      ctx.strokeStyle = '#b91c1c';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 13px Be Vietnam Pro';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`${currentEl.p}+`, cx, cy);
+
+      // Vẽ từng quỹ đạo và electron
+      const numShells = currentEl.shells.length;
+      const stepRadius = (maxRadius - 35) / Math.max(numShells, 1);
+
+      currentEl.shells.forEach((eCount, sIdx) => {
+        const r = 38 + (sIdx + 1) * stepRadius;
+
+        // Vòng tròn quỹ đạo
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.strokeStyle = '#93c5fd';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 6]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Vẽ các electron trên quỹ đạo
+        const speed = (sIdx % 2 === 0 ? 1 : -1) * (0.012 - sIdx * 0.002);
+        const currentAngle = angle * speed;
+
+        for (let i = 0; i < eCount; i++) {
+          const eAngle = currentAngle + (i * 2 * Math.PI / eCount);
+          const ex = cx + r * Math.cos(eAngle);
+          const ey = cy + r * Math.sin(eAngle);
+
+          ctx.beginPath();
+          ctx.arc(ex, ey, 7, 0, Math.PI * 2);
+          ctx.fillStyle = '#0284c7';
+          ctx.fill();
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // Dấu trừ e-
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '900 10px sans-serif';
+          ctx.fillText('-', ex, ey - 0.5);
+        }
+      });
+
+      angle += 1;
+      requestAnimationFrame(drawBohr);
+    }
+    requestAnimationFrame(drawBohr);
+
+    // XỬ LÝ NÚT PHÁT ÂM
+    document.getElementById('btnSpeak').addEventListener('click', () => {
+      speakName(currentEl.name);
+    });
+
+    // XỬ LÝ MODAL POPUP
+    document.getElementById('btnOpenPractice').addEventListener('click', () => {
+      document.getElementById('modalPractice').classList.add('active');
+    });
+    document.getElementById('btnOpenSummary').addEventListener('click', () => {
+      document.getElementById('modalSummary').classList.add('active');
+    });
+    function closeModals() {
+      document.querySelectorAll('.khtn-modal').forEach(m => m.classList.remove('active'));
+    }
+
+    function checkAnswer(btn, isCorrect) {
+      const fb = document.getElementById('quizFeedback');
+      if (isCorrect) {
+        btn.classList.add('correct');
+        playAudioTing();
+        fb.style.color = '#16a34a';
+        fb.textContent = '🎉 Chính xác! Carbon (Z = 6) có lớp 1 chứa 2e và lớp ngoài cùng (lớp 2) chứa 4e.';
+      } else {
+        btn.classList.add('wrong');
+        playAudioBeep();
+        fb.style.color = '#dc2626';
+        fb.textContent = '❌ Chưa chính xác! Em hãy quan sát lại phân bố electron trên mô hình và chọn lại nhé.';
+      }
+    }
+
+    // Khởi tạo ban đầu với Hydrogen
+    selectElement(ELEMENTS[0]);
+  </script>
+</body>
+</html>
